@@ -10,6 +10,8 @@ from cvtransforms import *
 
 from config import device, print_freq, sos_id, eos_id, word_number, p, vocab_size
 from data_gen import AiShellDataset, pad_collate
+from data_gen_LRW import AiShellDatasetLRW
+
 from transformer.encoder import Encoder
 from transformer.decoder import Decoder
 from transformer.loss import cal_performance
@@ -20,9 +22,15 @@ from utils import parse_args, save_checkpoint, AverageMeter, get_logger
 import pickle
 
 word_length = 14
-#from list_vocabs import words
-lrw1000_phonemes = ['sos', 'eos', 's', 'au', 'm', 'i', 'p', 'ii', 't', 'q', 'yu', 'x', 'j', 'an', 'y', 'eu', 'sh', 'iii', 'd', 'ong', 'ang', 'zh', 'l', 'e1', 'f', 'g', 'eng', 'ts', 'uo', 'a', 'ch', 'w', 'en', 'h', 'u', 'ai', 'yue', 'uu', 'in', 'ing', 'ei', 'z', 'b', 'zh1', 'k', 'ie', 'er', 'n']
 
+english_id = 2
+chinese_id = 3
+#from list_vocabs import words
+#total_phonemes = ['sos', 'eos', 's', 'p', 'ii', 'k', 'i', 'ng', 'l', 'e', 'v', 'e1', 'a1', 'm', 'z', 'zh', 'o', 'r', 'eu', 't', 'ai', 'h', 'th', 'y', 'n', 'ch', 'ae', 'au', 'er', 'd', 'f', 'ei', 'w', 'a', 'oi', 'b', 'uu', 'g', 'sh', 'dh', 'u', 'zh1', 'an', 'ang', 'en', 'eng', 'ie', 'in', 'ing', 'uo', 'ts', 'iii', 'ong', 'j', 'yu', 'yue', 'q', 'x']
+
+total_phonemes = ['sos', 'eos', 'english', 'chinese', 's', 'p', 'ii', 'k', 'i', 'ng', 'l', 'e', 'v', 'e1', 'a1', 'm', 'z', 'zh', 'o', 'r', 'eu', 't', 'ai', 'h', 'th', 'y', 'n', 'ch', 'ae', 'au', 'er', 'd', 'f', 'ei', 'w', 'a', 'oi', 'b', 'uu', 'g', 'sh', 'dh', 'u', 'zh1', 'an', 'ang', 'en', 'eng', 'ie', 'in', 'ing', 'uo', 'ts', 'iii', 'ong', 'j', 'yu', 'yue', 'q', 'x']
+
+print(total_phonemes)
 def wer_compute(predict, truth):        
         word_pairs = [(p[0].split(' '), p[1].split(' ')) for p in zip(predict, truth)]
         #print(word_pairs)
@@ -37,7 +45,7 @@ def wer_compute(predict, truth):
 
 def per_compute(predict, truth):        
         cer = [1.0*editdistance.eval(p[0], p[1])/len(p[1]) for p in zip(predict, truth)]
-        return np.array(cer).mean() 
+        return np.array(cer).mean()
 
 def train_net(args):
     torch.manual_seed(7)
@@ -49,7 +57,9 @@ def train_net(args):
     writer = SummaryWriter()
     
     epochs_since_improvement = 0
-    pt = 'acc0.38423358796386053.pt'
+    #pt = 'acc0.84412.pt'
+    pt='acc0.38423358796386053.pt'
+    #pt=None
     # Initialize / load checkpoint
     if checkpoint is None:
         # model
@@ -63,7 +73,7 @@ def train_net(args):
                           dropout=args.dropout,
                           tgt_emb_prj_weight_sharing=args.tgt_emb_prj_weight_sharing,
                           pe_maxlen=args.pe_maxlen)
-                          
+        
         model = Transformer(encoder, decoder, pt)
         # print(model)
         #model = nn.DataParallel(model, device_ids=[0,1,2])
@@ -85,10 +95,10 @@ def train_net(args):
                           pe_maxlen=args.pe_maxlen)
         
         model = Transformer(encoder, decoder, pt)
-        name = checkpoint
+        
+        checkpoint_name = checkpoint
         checkpoint = torch.load(checkpoint)
-        print('loading {} parameters successful!'.format(name))
-        #epochs_since_improvement = checkpoint['epochs_since_improvement']
+        print('loading model parameters successful--->{}!'.format(checkpoint_name))
         pretrain_model = checkpoint['model']
         pretrained_dict = pretrain_model.module.state_dict()
         
@@ -111,22 +121,28 @@ def train_net(args):
     # Move to GPU, if available
     model = model.to(device)
     model = nn.DataParallel(model, device_ids=[0,1])
-    # define a criterio
+    # define a criterion 
     criterion = nn.CrossEntropyLoss()
     criterion_KD = nn.KLDivLoss()
 
     # Custom dataloaders
     train_dataset = AiShellDataset(args, 'train')
-    #print(train_dataset[0][0].size())
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, pin_memory=True, shuffle=True, num_workers=args.num_workers)
+    #train_loader = torch.utils.data.DataLoader(train_dataset, batch_sampler=batch_sampler, pin_memory=True, num_workers=args.num_workers)
+    
     ###, collate_fn=pad_collate
-    valid_dataset = AiShellDataset(args, 'val')
-    valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=args.batch_size, pin_memory=True, shuffle=True, num_workers=args.num_workers)
+    valid_dataset_LRW = AiShellDatasetLRW(args, 'val')
+    valid_loader_LRW = torch.utils.data.DataLoader(valid_dataset_LRW, batch_size=args.batch_size, pin_memory=True, shuffle=True, num_workers=args.num_workers)
+
+    valid_dataset_LRW1000 = AiShellDataset(args, 'val')
+    valid_loader_LRW1000 = torch.utils.data.DataLoader(valid_dataset_LRW1000, batch_size=args.batch_size, pin_memory=True, shuffle=True, num_workers=args.num_workers)
 
     # Epochs
     k = 0
+    start_epoch = 0
     for epoch in range(start_epoch, args.epochs):
         # One epoch's training
+        
         train_loss, n = train(train_loader=train_loader,
                            model=model,
                            optimizer=optimizer,
@@ -141,21 +157,26 @@ def train_net(args):
         writer.add_scalar('model_{}/learning_rate'.format(word_length), lr, epoch)
         step_num = optimizer.step_num
         print('Step num: {}\n'.format(step_num))
-
-        # One epoch's validation
-        wer_l2r, per_l2r, wer_r2l, per_r2l = valid(valid_loader=valid_loader,model=model,logger=logger)
-        #writer.add_scalar('model_{}/valid_loss_l2r'.format(word_length), valid_loss_l2r, epoch)
-        writer.add_scalar('model_{}/valid_wer_l2r'.format(word_length), wer_l2r, epoch)
-        writer.add_scalar('model_{}/valid_per_l2r'.format(word_length), per_l2r, epoch)
         
-        #writer.add_scalar('model_{}/valid_loss_r2l'.format(word_length), valid_loss_r2l, epoch)
-        writer.add_scalar('model_{}/valid_wer_r2l'.format(word_length), wer_r2l, epoch)
-        writer.add_scalar('model_{}/valid_per_r2l'.format(word_length), per_r2l, epoch)
+        state = {'model': model}
+        filename = 'BEST_current_checkpoint.tar'
+        torch.save(state, filename)
+        #save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_loss, is_best)
+        '''
+        # One epoch's validation
+        valid_loss_lrw, wer_lrw, per_lrw = valid_lrw(valid_loader=valid_loader_LRW,model=model,logger=logger)
+        valid_loss_lrw1000, wer_lrw1000, per_lrw1000 = valid_lrw1000(valid_loader=valid_loader_LRW1000,model=model,logger=logger)
+        writer.add_scalar('model_{}/valid_loss_lrw'.format(word_length), valid_loss_lrw, epoch)
+        writer.add_scalar('model_{}/valid_wer_lrw'.format(word_length), wer_lrw, epoch)
+        writer.add_scalar('model_{}/valid_per_lrw'.format(word_length), per_lrw, epoch)
 
+        writer.add_scalar('model_{}/valid_loss_lrw1000'.format(word_length), valid_loss_lrw1000, epoch)
+        writer.add_scalar('model_{}/valid_wer_lrw1000'.format(word_length), wer_lrw1000, epoch)
+        writer.add_scalar('model_{}/valid_per_lrw1000'.format(word_length), per_lrw1000, epoch)
         # Check if there was an improvement
-        is_best = (wer_l2r+wer_r2l) < best_loss
+        is_best = (wer_lrw + wer_lrw1000) < best_loss
         #is_best = train_loss < best_loss
-        best_loss = min((wer_l2r+wer_r2l), best_loss)
+        best_loss = min((wer_lrw + wer_lrw1000), best_loss)
         if not is_best:
             epochs_since_improvement += 1
             print("\nEpochs since last improvement: %d\n" % (epochs_since_improvement,))
@@ -164,7 +185,8 @@ def train_net(args):
 
         # Save checkpoint
         save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_loss, is_best)
-
+         '''   
+            
 
 def train(train_loader, model, optimizer, epoch, logger, k):
     #writer = SummaryWriter()
@@ -176,24 +198,18 @@ def train(train_loader, model, optimizer, epoch, logger, k):
     n = k
     for i, (data) in enumerate(train_loader):
         # Move to GPU, if available
-        padded_input, padded_target, padded_target_reverse = data
-        #padded_input, padded_target = data
-        #print(padded_input.size(), padded_target.size())
+        padded_input, padded_target, _ = data
         padded_input = padded_input.to(device)
         padded_target = padded_target.to(device)
-        padded_target_reverse = padded_target_reverse.to(device)
-        
-        pred_l2r, gold_l2r, pred_r2l, gold_r2l = model(padded_input, padded_target, padded_target_reverse)
-        #pred = pred.argmax(-1)
-        
+        pred, gold = model(padded_input, padded_target)
+        preds = pred.argmax(-1)
+        #print('preds: ', preds)
+        #print('golds: ', gold)
         #print(pred.size(), gold.size())
         #print(pred.size(), gold.size())
-        loss_l2r, n_correct_l2r = cal_performance(pred_l2r, gold_l2r, smoothing=args.label_smoothing)
-        loss_r2l, n_correct_r2l = cal_performance(pred_r2l, gold_r2l, smoothing=args.label_smoothing)
+        loss, n_correct = cal_performance(pred, gold, smoothing=args.label_smoothing)
+
         # Back prop.
-        
-        loss = 0.5*(loss_l2r+loss_r2l)
-        #loss = loss_r2l
         optimizer.zero_grad()
         loss.backward()
 
@@ -210,69 +226,52 @@ def train(train_loader, model, optimizer, epoch, logger, k):
             logger.info('Epoch: [{0}][{1}/{2}]\t'
                         'Loss {loss.val:.5f} ({loss.avg:.5f})'.format(epoch, i, len(train_loader), loss=losses))
 
-        #if n%10== 0:
+        #if n%100 == 0:
          #   break
 
     return losses.avg, n
 
-
-def valid(valid_loader, model, logger):
-    #model = nn.DataParallel(model, device_ids=[0,1,2])
-    #model = model.to(device)
-    model = model.module
+def valid_lrw(valid_loader, model, logger):
     model.eval()
-    #print(model)
-    #losses_l2r = AverageMeter()
-    #losses_r2l = AverageMeter()
+
+    losses = AverageMeter()
     pred_all_txt = []
     gold_all_txt = []
     
     pred_phonemes = []
     gold_phonemes = []
-    
-    pred_all_txt_r2l = []
-    gold_all_txt_r2l = []
-    
-    pred_phonemes_r2l = []
-    gold_phonemes_r2l = []
     # Batches
     wer = float(0)
     for data in tqdm(valid_loader):
         # Move to GPU, if available
-        padded_input, padded_target, padded_target_reverse = data
+        padded_input, padded_target, _ = data
+        batch_img = CenterCrop(padded_input.numpy(), (88, 88))
+        batch_img = ColorNormalize(batch_img)
+        
+        padded_input = torch.from_numpy(batch_img)
+        #padded_inputs = inputs.float().permute(0, 4, 1, 2, 3).contiguous()
+        padded_input = torch.FloatTensor(padded_input.float())
         padded_input = padded_input.to(device)
         padded_target = padded_target.to(device)
-        padded_target_reverse = padded_target_reverse.to(device)
         #input_lengths = input_lengths.to(device)
         #if padded_target.size(1) <= word_length:
         with torch.no_grad():
                 # Forward prop.
-                gold_l2r = padded_target
-                gold_r2l = padded_target_reverse
-                pred_l2r, pred_r2l = model.recognize(padded_input)
-                #print(pred_l2r)
-                #print(gold_l2r)
-                #loss_l2r, n_correct_l2r = cal_performance(pred_l2r, gold_l2r, smoothing=args.label_smoothing)
-                #loss_r2l, n_correct_r2l = cal_performance(pred_r2l, gold_r2l, smoothing=args.label_smoothing)
+                pred, gold = model(padded_input, padded_target)
+                loss, n_correct = cal_performance(pred, gold, smoothing=args.label_smoothing)
+                pred_argmax = pred.argmax(-1)
+                predss = pred_argmax
                 
-                #pred_l2r_argmax = pred_l2r.argmax(-1)
-                predss_l2r = pred_l2r
-                
-                #pred_r2l_argmax = pred_r2l.argmax(-1)
-                predss_r2l = pred_r2l
-                
-                #print(preds, preds.cpu().numpy())
                 pred_txt = []
                 gold_txt = []
-                pred_txt_r2l = []
-                gold_txt_r2l = []
-                length = predss_l2r.size(0)
-                length_r2l = predss_r2l.size(0)
+                length = predss.size(0)
                 for n in range(length):
                 #changdu = len(gold[n].cpu().numpy())
-                    golds = [lrw1000_phonemes[one] for one in gold_l2r[n].cpu().numpy() if one not in (sos_id, eos_id, -1)]
+                    #print(gold[n])
+                    golds = [total_phonemes[one] for one in gold[n].cpu().numpy() if one not in (sos_id, eos_id, english_id, chinese_id, -1)]
                     changdu = len(golds)
-                    preds = [lrw1000_phonemes[one] for one in predss_l2r[n].cpu().numpy()[:(changdu+1)] if one not in (sos_id, eos_id, -1)]
+                    #print(preds[n].cpu())
+                    preds = [total_phonemes[one] for one in predss[n].cpu().numpy()[:changdu] if one not in (sos_id, eos_id, english_id, chinese_id, -1)]
                     pred_txt.append(''.join(preds))
                     pred_phonemes.append(preds)
                     
@@ -284,40 +283,75 @@ def valid(valid_loader, model, logger):
                     
                     pred_all_txt.extend(pred_txt)
                     gold_all_txt.extend(gold_txt)
-                    
-                for n in range(length_r2l):
+                
+                #print(' '.join(golds))
+                #print(pred_argmax, gold)
+
+        # Keep track of metrics
+        losses.update(loss.item())
+
+    wer = wer_compute(pred_all_txt, gold_all_txt)
+    per = per_compute(pred_phonemes, gold_phonemes)
+    print('wer: ', wer, 'per: ', per)
+    
+    # Print status
+    logger.info('\nValidation Loss {loss.val:.5f} ({loss.avg:.5f})\n'.format(loss=losses))
+
+    return losses.avg, wer, per
+
+def valid_lrw1000(valid_loader, model, logger):
+    model.eval()
+
+    losses = AverageMeter()
+    
+    pred_all_txt = []
+    gold_all_txt = []
+    
+    pred_phonemes = []
+    gold_phonemes = []
+    for data in tqdm(valid_loader):
+        # Move to GPU, if available
+        padded_input_visual, padded_target, indictions = data
+        padded_input_visual = padded_input_visual.to(device)
+        padded_target = padded_target.to(device)
+
+        with torch.no_grad():
+                pred, gold = model(padded_input_visual, padded_target)
+                loss, n_correct = cal_performance(pred, gold, smoothing=args.label_smoothing)
+                pred_argmax = pred.argmax(-1)
+                predss = pred_argmax
+                #print(preds, preds.cpu().numpy())
+                pred_txt = []
+                gold_txt = []
+                length = predss.size(0)
+                for n in range(length):
                 #changdu = len(gold[n].cpu().numpy())
-                    golds = [lrw1000_phonemes[one] for one in gold_r2l[n].cpu().numpy() if one not in (sos_id, eos_id, -1)]
+                    golds = [total_phonemes[one] for one in gold[n].cpu().numpy() if one not in (sos_id, eos_id, english_id, chinese_id, -1)]
                     changdu = len(golds)
-                    preds = [lrw1000_phonemes[one] for one in predss_r2l[n].cpu().numpy()[:(changdu+1)] if one not in (sos_id, eos_id, -1)]
-                    pred_txt_r2l.append(''.join(preds))
-                    pred_phonemes_r2l.append(preds)
+                    preds = [total_phonemes[one] for one in predss[n].cpu().numpy()[:changdu] if one not in (sos_id, eos_id, english_id, chinese_id, -1)]
+                    pred_txt.append(''.join(preds))
+                    pred_phonemes.append(preds)
                     
-                    gold_txt_r2l.append(''.join(golds))
-                    gold_phonemes_r2l.append(golds)
+                    gold_txt.append(''.join(golds))
+                    gold_phonemes.append(golds)
                     
                     #print('pred: ', preds)
                     #print('gold: ', golds)
                     
-                    pred_all_txt_r2l.extend(pred_txt_r2l)
-                    gold_all_txt_r2l.extend(gold_txt_r2l)
-                    
-        # Keep track of metrics
-        #losses_l2r.update(loss_l2r.item())
-        #losses_r2l.update(loss_r2l.item())
+                    pred_all_txt.extend(pred_txt)
+                    gold_all_txt.extend(gold_txt)
 
-    l2r_wer = wer_compute(pred_all_txt, gold_all_txt)
-    l2r_per = per_compute(pred_phonemes, gold_phonemes)
-    
-    r2l_wer = wer_compute(pred_all_txt_r2l, gold_all_txt_r2l)
-    r2l_per = per_compute(pred_phonemes_r2l, gold_phonemes_r2l)
-    print('l2r_wer: ', l2r_wer, 'l2r_per: ', l2r_per)
-    print('r2l_wer: ', r2l_wer, 'r2l_per: ', r2l_per)
+        # Keep track of metrics
+        losses.update(loss.item())
+
+    wer = wer_compute(pred_all_txt, gold_all_txt)
+    per = per_compute(pred_phonemes, gold_phonemes)
+    print('wer: ', wer, 'per: ', per)
     
     # Print status
-    #logger.info('\nValidation Loss {loss.val:.5f} ({loss.avg:.5f})\n'.format(loss=losses))
+    logger.info('\nValidation Loss {loss.val:.5f} ({loss.avg:.5f})\n'.format(loss=losses))
 
-    return l2r_wer, l2r_per, r2l_wer, r2l_per
+    return losses.avg, wer, per
 
 def main():
     global args

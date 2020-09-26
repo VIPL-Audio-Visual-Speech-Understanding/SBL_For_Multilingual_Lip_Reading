@@ -35,7 +35,7 @@ word_number = 6
 p = 1
 mask = 0.7
 
-vocab_size = 48
+vocab_size = 60
 
 DATA_DIR = 'data'
 aishell_folder = 'data/data_aishell'
@@ -44,9 +44,14 @@ tran_file = os.path.join(aishell_folder, 'transcript/aishell_transcript_v0.8.txt
 
 pickle_file = 'LRW.pickle'
 
+lrw_path = '/data/lip/LRW/roi_80_116_175_211_npy_gray'
+lrw_info = '/train/LRW_TXT'
+lrw_wav = '/data/lip/LRW/lrw_mp4'
+
 lrw1000_path = '/train/LRW1000_npy_rsz122_gray'
 lrw1000_info = '/data/lip/LRW1000/LRW1000_info'
 lrw1000_wav = '/data/lip/LRW1000/LRW1000_audio'
+
 #grid_wav = '/home/luomingshuang/GRID/audio'
 #grid_images = '/train/GRID_6k_lip_train_val_align'
 #grid_text = '/home/luomingshuang/GRID/text'

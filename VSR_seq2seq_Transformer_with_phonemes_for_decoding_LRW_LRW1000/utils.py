@@ -20,13 +20,17 @@ def clip_gradient(optimizer, grad_clip):
 
 
 def save_checkpoint(epoch, epochs_since_improvement, model, optimizer, loss, is_best):
-    state = {'model': model}
+    state = {'epoch': epoch,
+             'epochs_since_improvement': epochs_since_improvement,
+             'loss': loss,
+             'model': model,
+             'optimizer': optimizer}
 
     filename = 'checkpoint.tar'
     torch.save(state, filename)
     # If this checkpoint is the best so far, store a copy so it doesn't get overwritten by a worse checkpoint
     if is_best:
-        torch.save(state, 'BEST_checkpoint_LRW1000_phonemes_decoding_gai.tar'.format(p))
+        torch.save(state, 'BEST_checkpoint_{}_mix_lrw_lrw1000_decoding.tar'.format(p))
 
 
 class AverageMeter(object):
@@ -83,7 +87,7 @@ def parse_args():
     # TODO: automatically infer input dim
     parser.add_argument('--d_input', default=80, type=int,
                         help='Dim of encoder input (before LFR)')
-    parser.add_argument('--n_layers_enc', default=3, type=int,
+    parser.add_argument('--n_layers_enc', default=6, type=int,
                         help='Number of encoder stacks')
     parser.add_argument('--n_head', default=8, type=int,
                         help='Number of Multi Head Attention (MHA)')
@@ -116,7 +120,9 @@ def parse_args():
     # minibatch
     parser.add_argument('--shuffle', default=1, type=int,
                         help='reshuffle the data at every epoch')
-    parser.add_argument('--batch-size', default=76, type=int,
+    parser.add_argument('--batch_size', default=272, type=int,
+                        help='Batch size')
+    parser.add_argument('--lrw_batch_size', default=30, type=int,
                         help='Batch size')
     parser.add_argument('--batch_frames', default=0, type=int,
                         help='Batch frames. If this is not 0, batch size will make no sense')
@@ -135,7 +141,7 @@ def parse_args():
                         help='warmup steps')
 
     #parser.add_argument('--checkpoint', type=str, default=None, help='checkpoint')
-    parser.add_argument('--checkpoint', type=str, default='BEST_checkpoint_LRW1000_phonemes_decoding_gai.tar', help='checkpoint')
+    parser.add_argument('--checkpoint', type=str, default='BEST_checkpoint_1_mix_lrw_lrw1000_decoding.tar', help='checkpoint')
     args = parser.parse_args()
     return args
 
