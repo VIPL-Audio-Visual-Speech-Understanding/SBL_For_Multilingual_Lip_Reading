@@ -5,4 +5,4 @@ This is a project for multilingual lip reading with synchronous bidirectional le
 
 Dependencies
 ----
-Python 3.8
+* Pytorch：3.8
