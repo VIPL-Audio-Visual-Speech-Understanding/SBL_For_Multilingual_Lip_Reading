@@ -19,8 +19,8 @@ In this respository, we placed four directories. The directories called VSR_seq2
 
 In SBL_MLR, for training stage, we suggest the following three stages:
 * Stage 1:
-
+···
  #Pretraining the visual-frontend and transformer encoder firstly.
-
+···
 * Stage 2:
 * Stage 3:
