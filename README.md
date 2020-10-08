@@ -15,3 +15,7 @@ This project is trained on LRW (grayscale) and LRW-1000 (grayscale).
 
 Training And Testing
 ----
+For training stage, we suggest the following three stages:
+* Stage 1:
+* Stage 2:
+* Stage 3:
