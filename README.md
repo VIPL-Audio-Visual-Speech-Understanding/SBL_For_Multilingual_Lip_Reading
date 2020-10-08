@@ -23,4 +23,10 @@ In SBL_MLR, for training stage, we suggest the following three stages:
 Pretraining the visual-frontend and transformer encoder firstly.
 ```
 * Stage 2:
+```
+Fix the visual-frontend and transformer encoder, train the SBL-transformer-decoder. 
+```
 * Stage 3:
+```
+Finetune the total model.
+```
