@@ -16,6 +16,7 @@ This project is trained on LRW (grayscale) and LRW-1000 (grayscale).
 Training And Testing
 ----
 In this respository, we placed four directories. The directories called VSR_seq2seq_Transformer_with_phonemes_LRW and VSR_seq2seq_Transformer_with_phonemes_LRW1000 refer the work that train the model LRW and LRW1000 each other with phonemes. 
+
 For training stage, we suggest the following three stages:
 * Stage 1:
 * Stage 2:
