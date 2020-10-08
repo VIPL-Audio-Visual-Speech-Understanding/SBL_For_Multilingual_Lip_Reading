@@ -18,6 +18,6 @@ Training And Testing
 In this respository, we placed four directories. The directories called VSR_seq2seq_Transformer_with_phonemes_LRW and VSR_seq2seq_Transformer_with_phonemes_LRW1000 refer the work that train the model LRW and LRW1000 each other with phonemes. The VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify refers to the work that viewing a 1500-classes classifying task. 
 
 In SBL_MLR, for training stage, we suggest the following three stages:
-* Stage 1:
+* Stage 1:   Pretraining the visual-frontend and transformer encoder firstly.
 * Stage 2:
 * Stage 3:
