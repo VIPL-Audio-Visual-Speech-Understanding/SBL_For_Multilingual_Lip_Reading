@@ -24,12 +24,17 @@ Some codes of this respository is based on [Speech-Transformer](https://github.c
 Thanks for their inspiring works.
 
 
-
 In this respository, we placed four directories. 
+
 The directories called VSR_seq2seq_Transformer_with_phonemes_LRW and VSR_seq2seq_Transformer_with_phonemes_LRW1000 
 refer the work that train the model LRW and LRW1000 each other with phonemes. 
 ```
 cd VSR_seq2seq_Transformer_with_phonemes_LRW
+python train.py
+```
+```
+cd VSR_seq2seq_Transformer_with_phonemes_LRW1000
+python train.py
 ```
 The VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify refers to the work that viewing a 1500-classes classifying task. 
 
@@ -38,7 +43,7 @@ In SBL_MLR, for training stage, we suggest the following three stages:
 (including the visual-frontend and the transformer encoder) by a 1500 classes classifying task.
 ```
 cd VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify
-CUDA_VISIBLE_DEVICES='0,1,2,3' python train.py
+python train.py
 ```
 * Stage 2: With a pretrained encoder model by stage 1, we went on training the SBL model. 
 Loading the pretrained encoder part model, and fixing it. In this stage, we mainly trained the 
@@ -49,7 +54,7 @@ cd SBL_For_Multilingual_Lip_Reading
 vim utils.py ## set checkpoint default to BEST_checkpoint_only_visual_based_lrw_lrw1000_1500.tar
 vim transformer/transformer.py ## set p.requires_grad = False
 
-CUDA_VISIBLE_DEVICES='0,1,2,3' python train.py
+python train.py
 ```
 * Stage 3: 
 ```
