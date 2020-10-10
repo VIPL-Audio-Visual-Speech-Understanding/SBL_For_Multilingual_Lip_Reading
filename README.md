@@ -1,7 +1,8 @@
 # SBL_For_Multilingual_Lip_Reading
 Introduction
 ----
-This is a project for multilingual lip reading with synchronous bidirectional learning. In this project, we implemented it with Pytorch. Our paper can be found [here](https://arxiv.org/abs/2005.03846).
+This is a project for multilingual lip reading with synchronous bidirectional learning. 
+In this project, we implemented it with Pytorch. Our paper can be found [here](https://arxiv.org/abs/2005.03846).
 
 Dependencies
 ----
@@ -15,9 +16,21 @@ This project is trained on LRW (grayscale) and LRW-1000 (grayscale).
 
 Training And Testing
 ----
+About the phonemes for modeling in this work, we built our phonemes table based on [DaCiDian](https://github.com/aishell-foundation/DaCiDian), 
+[BigCiDian](https://github.com/speechio/BigCiDian), [g2p](https://github.com/Kyubyong/g2p) and [
+g2pC](https://github.com/Kyubyong/g2pC). Here, thanks for their inspiring works. 
+
+Some codes of this respository is based on [Speech-Transformer](https://github.com/kaituoxu/Speech-Transformer) and [end-to-end-lipreading](https://github.com/mpc001/end-to-end-lipreading). 
+Thanks for their inspiring works.
+
+
+
 In this respository, we placed four directories. 
 The directories called VSR_seq2seq_Transformer_with_phonemes_LRW and VSR_seq2seq_Transformer_with_phonemes_LRW1000 
 refer the work that train the model LRW and LRW1000 each other with phonemes. 
+```
+cd VSR_seq2seq_Transformer_with_phonemes_LRW
+```
 The VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify refers to the work that viewing a 1500-classes classifying task. 
 
 In SBL_MLR, for training stage, we suggest the following three stages:
