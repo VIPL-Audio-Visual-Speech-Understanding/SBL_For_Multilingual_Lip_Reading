@@ -37,7 +37,10 @@ cd VSR_seq2seq_Transformer_with_phonemes_LRW1000
 python train.py
 ```
 The VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify refers to the work that viewing a 1500-classes classifying task. 
-
+```
+cd VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify
+python train.py
+```
 In SBL_MLR, for training stage, we suggest the following three stages:
 * Stage 1: For accelerating the training speed, in the stage 1, we pretrained the encoder part 
 (including the visual-frontend and the transformer encoder) by a 1500 classes classifying task.
@@ -54,9 +57,11 @@ cd SBL_For_Multilingual_Lip_Reading
 vim utils.py ## set checkpoint default to BEST_checkpoint_only_visual_based_lrw_lrw1000_1500.tar
 vim transformer/transformer.py ## set p.requires_grad = False
 
-python train.py
+step 1: set teach_forcing_rate=0.5--> python train.py
+step 2: set teach_forcing_rate=0.1--> python train.py
 ```
-* Stage 3: 
+* Stage 3: Based on stage 2 and stage 3, we could get a good pretrained encoder (including visual-frontend
+ and transformer encoder) and a good pretrained SBL decoder. 
 ```
 Finetune the total model.
 ```
