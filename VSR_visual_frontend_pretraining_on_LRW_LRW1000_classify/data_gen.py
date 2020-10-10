@@ -239,25 +239,8 @@ class AiShellDataset(Dataset):
         
         vids[:length, :, :] = vid
         auds[:len(aud), :] = aud
-        #print(vids.shape)
-        
-        ####random choose 14 sequences to 0
-        '''
-        indices = [random.randint(0,29) for _ in range(int(29*mask))]
-        zeros_seq = np.zeros((w, h), dtype=np.float32)
-        for indice in indices:
-            vids[indice] = zeros_seq
-        '''    
-        #vid = vid.copy()
-        # print(vid.shape)
-        # print(aud.shape)
-
-        # auds = np.zeros((41, 320), dtype=np.float32)
-        # aud = self._padding(aud, 41)
-        # auds[:len(aud), :] = aud
 
         return vids, torch.FloatTensor(auds), trn, indiction
-        #return vid, trn
 
     def __len__(self):
         return len(self.samples)
@@ -396,9 +379,9 @@ if __name__ == "__main__":
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_sampler=batch_sampler, pin_memory=True, num_workers=args.num_workers)
     for i, data in enumerate(train_loader):
         if i == 0:
-          _, _, target = data
-          print(target)
-          break
+            _, _, target = data
+            print(target)
+            break
 
     print('train_dataset: ', len(train_dataset), len(train_loader))
     #print('valid_dataset: ', len(valid_dataset), len(valid_loader))

@@ -2,7 +2,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from tensorboardX import SummaryWriter
 # from torch import nn
 from tqdm import tqdm
 import editdistance
@@ -28,13 +27,10 @@ def train_net(args):
     checkpoint = args.checkpoint
     start_epoch = 0
     best_loss = float('inf')
-
-    writer = SummaryWriter()
     
     epochs_since_improvement = 0
-    #pt = 'acc0.84412.pt'
-    pt='acc0.38423358796386053.pt'
-    #pt=None
+    pt=None
+
     # Initialize / load checkpoint
     if checkpoint is None:
         # model
@@ -80,7 +76,7 @@ def train_net(args):
 
     # Move to GPU, if available
     model = model.to(device)
-    model = nn.DataParallel(model, device_ids=[0,1])
+    model = nn.DataParallel(model, device_ids=[0,1,2,3])
     # define a criterion 
     criterion = nn.CrossEntropyLoss()
     criterion_KD = nn.KLDivLoss()
@@ -88,9 +84,7 @@ def train_net(args):
     # Custom dataloaders
     train_dataset = AiShellDataset(args, 'train')
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, pin_memory=True, shuffle=True, num_workers=args.num_workers)
-    #train_loader = torch.utils.data.DataLoader(train_dataset, batch_sampler=batch_sampler, pin_memory=True, num_workers=args.num_workers)
-    
-    ###, collate_fn=pad_collate
+
     valid_dataset_LRW = AiShellDatasetLRW(args, 'val')
     valid_loader_LRW = torch.utils.data.DataLoader(valid_dataset_LRW, batch_size=args.batch_size, pin_memory=True, shuffle=True, num_workers=args.num_workers)
 
@@ -113,12 +107,6 @@ def train_net(args):
         for i, (data) in enumerate(train_loader):
             # Move to GPU, if available
             padded_input_visual, _, padded_target, indictions = data
-            #print(padded_input_visual.size())
-            #print(indictions)
-            #batch_img = RandomCrop(padded_input_visual.numpy(), (88, 88))
-            #batch_img = ColorNormalize(padded_input_visual.numpy())
-            #padded_input = torch.from_numpy(batch_img)
-            #print(padded_input_visual.size())
             padded_input = torch.FloatTensor(padded_input_visual.float())
 
             padded_input_visual = padded_input.to(device)
@@ -135,17 +123,13 @@ def train_net(args):
             
             running_corrects_train_visual_lrw1000 += torch.sum(visual_preds_lrw1000 == languages.data)
             running_all_train_visual_lrw1000 += len(padded_input_visual)
-            #print(visual_preds_lrw)
-            #print(padded_target[:args.lrw_batch_size])
 
             loss_1500 = criterion(v_t, padded_target)
             loss_2 = criterion(v_t_languages, languages)
             
             loss = loss_1500 + 0.1* loss_2
-            #loss = loss_lrw
-            #loss = loss_lrw1000
+
             # Back prop.
-            
             optimizer.zero_grad()
             loss.backward()
 
@@ -159,41 +143,25 @@ def train_net(args):
                 logger.info('Epoch: [{0}][{1}/{2}]\t'
                         'Loss (loss:{3}, loss_1500:{4}, loss_2:{5}) {loss.val:.5f} ({loss.avg:.5f}) '.format(epoch, i, len(train_loader), loss.item(), loss_1500.item(), loss_2.item(), loss=losses))
 
-            #print('train_loss: ', train_loss)
-            writer.add_scalar('model_{}/v_t_train_loss'.format(p), loss_1500, k)
-            writer.add_scalar('model_{}/v_t_languages_train_loss'.format(p), loss_2, k)
-          
             k += 1
             #if k == 1:
              #   break
         
         visual_train_acc_lrw = running_corrects_train_visual_lrw.item() / running_all_train_visual_lrw
         visual_train_acc_lrw1000 = running_corrects_train_visual_lrw1000.item() / running_all_train_visual_lrw1000
-        #audio_train_acc = running_corrects_train_audio.item() / running_all_train_audio
         print('the word classifier accuracy: ',visual_train_acc_lrw, 'the language classifier accuracy: ', visual_train_acc_lrw1000)
-        
-        writer.add_scalar('model_{}/words_train_acc'.format(p), visual_train_acc_lrw, epoch)
-        writer.add_scalar('model_{}/languages_train_acc'.format(p), visual_train_acc_lrw1000, epoch)
+
         lr = optimizer.lr
-        
         print('\nLearning rate: {}'.format(lr))
-        writer.add_scalar('model_{}/learning_rate'.format(p), lr, epoch)
+
         step_num = optimizer.step_num
-        
         print('Step num: {}\n'.format(step_num))
 
         # One epoch's validation
         v_acc_lrw = 0
         visual_valid_loss_lrw, v_acc_lrw, acc1 = valid_lrw(valid_loader=valid_loader_LRW, model=model,criterion = criterion, logger=logger, batch_size=args.batch_size)
-                      
         visual_valid_loss_lrw1000, v_acc_lrw1000, acc2 = valid_lrw1000(valid_loader=valid_loader_LRW1000, model=model, criterion = criterion, logger=logger, batch_size=args.batch_size-args.batch_size)
 
-        writer.add_scalar('model_{}/visual_valid_acc_lrw'.format(p), v_acc_lrw, epoch)
-        writer.add_scalar('model_{}/visual_valid_acc_lrw1000'.format(p), v_acc_lrw1000, epoch)
-        writer.add_scalar('model_{}/visual_valid_languages_acc_lrw'.format(p), acc1, epoch)
-        writer.add_scalar('model_{}/visual_valid_languages_acc_lrw1000'.format(p), acc2, epoch)
-        writer.add_scalar('model_{}/visual_valid_loss_lrw'.format(p), visual_valid_loss_lrw, epoch)
-        writer.add_scalar('model_{}/visual_valid_loss_lrw1000'.format(p), visual_valid_loss_lrw1000, epoch)
         # Check if there was an improvement
         acc = v_acc_lrw+v_acc_lrw1000
         is_best = (1-acc) < best_loss
@@ -207,7 +175,6 @@ def train_net(args):
 
         # Save checkpoint
         save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_loss, is_best)
-
 
 def valid_lrw(valid_loader, model, criterion, logger, batch_size):
     model.eval()
@@ -227,7 +194,6 @@ def valid_lrw(valid_loader, model, criterion, logger, batch_size):
         batch_img = ColorNormalize(batch_img)
         
         padded_input = torch.from_numpy(batch_img)
-        #padded_inputs = inputs.float().permute(0, 4, 1, 2, 3).contiguous()
         padded_input = torch.FloatTensor(padded_input.float())
         padded_input_visual = padded_input.to(device)
         padded_target = padded_target.to(device)

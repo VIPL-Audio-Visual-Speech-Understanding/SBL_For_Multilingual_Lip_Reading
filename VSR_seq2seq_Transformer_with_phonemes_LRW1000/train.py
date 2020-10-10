@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from tensorboardX import SummaryWriter
+
 # from torch import nn
 from tqdm import tqdm
 import editdistance
@@ -144,9 +144,6 @@ def train_net(args):
 
         # One epoch's validation
         valid_loss, wer, per = valid(valid_loader=valid_loader,model=model,logger=logger)
-        writer.add_scalar('model_{}/valid_loss'.format(word_length), valid_loss, epoch)
-        writer.add_scalar('model_{}/valid_wer'.format(word_length), wer, epoch)
-        writer.add_scalar('model_{}/valid_per'.format(word_length), per, epoch)
 
         # Check if there was an improvement
         is_best = wer < best_loss
@@ -161,10 +158,7 @@ def train_net(args):
         # Save checkpoint
         save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_loss, is_best)
 
-
 def train(train_loader, model, optimizer, epoch, logger, k):
-    #writer = SummaryWriter()
-    
     model.train()  # train mode (dropout and batchnorm is used)
 
     losses = AverageMeter()
@@ -173,13 +167,11 @@ def train(train_loader, model, optimizer, epoch, logger, k):
     for i, (data) in enumerate(train_loader):
         # Move to GPU, if available
         padded_input, padded_target = data
-        #padded_input, padded_target = data
-        #print(padded_input.size(), padded_target.size())
+
         padded_input = padded_input.to(device)
         padded_target = padded_target.to(device)
+
         pred, gold = model(padded_input, padded_target)
-        #print(pred.size(), gold.size())
-        #print(pred.size(), gold.size())
         loss, n_correct = cal_performance(pred, gold, smoothing=args.label_smoothing)
 
         # Back prop.
@@ -188,8 +180,7 @@ def train(train_loader, model, optimizer, epoch, logger, k):
 
         # Update weights
         optimizer.step()
-        
-        #writer.add_scalar('model_{}/train_iteration_loss'.format(word_length), loss.item(), n)
+
         n += 1
         # Keep track of metrics
         losses.update(loss.item())
@@ -233,35 +224,19 @@ def valid(valid_loader, model, logger):
                 pred_txt = []
                 #pred_phone = []
                 for arr in preds.cpu().numpy():
-                    #preds = []
-                    #for one in arr:
-                     #   if one != eos_id:
-                      #      preds.append(char_list[one])
-                       # else:
-                        #    break
                     preds = [lrw1000_phonemes[one] for one in arr if one not in (sos_id, eos_id, -1)]
                     pred_txt.append(''.join(preds))
-                    
-                    #print(pred_txt)
+
                 pred_all_txt.extend(pred_txt)
                 pred_phonemes.append(preds)
                 gold_txt = []
-                for arr in gold.cpu().numpy():
-                    #print(arr)
-                    #golds = []
-                    # for one in arr:
-                    #     if one == -1 or one ==1:
-                    #         golds.append('')
-                    #     else:
-                    #         golds.append(char_list[one])
 
+                for arr in gold.cpu().numpy():
                     golds = [lrw1000_phonemes[one] for one in arr if one not in (sos_id, eos_id, -1)]
                     gold_txt.append(''.join(golds))
                     #print(gold_txt)
                 gold_all_txt.extend(gold_txt)
                 gold_phonemes.append(golds)
-                #print(' '.join(golds))
-                #print(pred_argmax, gold)
 
         # Keep track of metrics
         losses.update(loss.item())
@@ -275,12 +250,10 @@ def valid(valid_loader, model, logger):
 
     return losses.avg, wer, per
 
-
 def main():
     global args
     args = parse_args()
     train_net(args)
-
 
 if __name__ == '__main__':
     main()

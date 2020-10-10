@@ -15,18 +15,46 @@ This project is trained on LRW (grayscale) and LRW-1000 (grayscale).
 
 Training And Testing
 ----
-In this respository, we placed four directories. The directories called VSR_seq2seq_Transformer_with_phonemes_LRW and VSR_seq2seq_Transformer_with_phonemes_LRW1000 refer the work that train the model LRW and LRW1000 each other with phonemes. The VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify refers to the work that viewing a 1500-classes classifying task. 
+In this respository, we placed four directories. 
+The directories called VSR_seq2seq_Transformer_with_phonemes_LRW and VSR_seq2seq_Transformer_with_phonemes_LRW1000 
+refer the work that train the model LRW and LRW1000 each other with phonemes. 
+The VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify refers to the work that viewing a 1500-classes classifying task. 
 
 In SBL_MLR, for training stage, we suggest the following three stages:
-* Stage 1:
+* Stage 1: For accelerating the training speed, in the stage 1, we pretrained the encoder part 
+(including the visual-frontend and the transformer encoder) by a 1500 classes classifying task.
 ```
-Pretraining the visual-frontend and transformer encoder firstly.
+cd VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify
+CUDA_VISIBLE_DEVICES='0,1,2,3' python train.py
 ```
-* Stage 2:
+* Stage 2: With a pretrained encoder model by stage 1, we went on training the SBL model. 
+Loading the pretrained encoder part model, and fixing it. In this stage, we mainly trained the 
+SBL transformer decoder. 
 ```
-Fix the visual-frontend and transformer encoder, train the SBL-transformer-decoder. 
+cp -r VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify/BEST_checkpoint_only_visual_based_lrw_lrw1000_1500.tar SBL_For_Multilingual_Lip_Reading/
+cd SBL_For_Multilingual_Lip_Reading
+vim utils.py ## set checkpoint default to BEST_checkpoint_only_visual_based_lrw_lrw1000_1500.tar
+vim transformer/transformer.py ## set p.requires_grad = False
+
+CUDA_VISIBLE_DEVICES='0,1,2,3' python train.py
 ```
-* Stage 3:
+* Stage 3: 
 ```
 Finetune the total model.
+```
+* Stage 4:
+```
+testing the model.
+```
+
+Reference
+----
+If this work is useful for your research, please cite our work:
+```
+@article{luo2020synchronous,
+  title={Synchronous Bidirectional Learning for Multilingual Lip Reading},
+  author={Luo, Mingshuang and Yang, Shuang and Chen, Xilin and Liu, Zitao and Shan, Shiguang},
+  journal={arXiv preprint arXiv:2005.03846},
+  year={2020}
+}
 ```

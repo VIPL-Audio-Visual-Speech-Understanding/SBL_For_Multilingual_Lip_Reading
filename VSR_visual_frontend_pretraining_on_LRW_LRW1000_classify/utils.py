@@ -30,7 +30,7 @@ def save_checkpoint(epoch, epochs_since_improvement, model, optimizer, loss, is_
     torch.save(state, filename)
     # If this checkpoint is the best so far, store a copy so it doesn't get overwritten by a worse checkpoint
     if is_best:
-        torch.save(state, 'BEST_checkpoint_{}_only_visual_based_lrw_lrw1000_1500.tar'.format(p))
+        torch.save(state, 'BEST_checkpoint_only_visual_based_lrw_lrw1000_1500.tar')
 
 
 class AverageMeter(object):
