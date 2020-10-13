@@ -35,11 +35,6 @@ p = 1
 mask = 0.7
 vocab_size = 42
 
-DATA_DIR = 'data'
-aishell_folder = 'data/data_aishell'
-wav_folder = os.path.join(aishell_folder, 'wav')
-tran_file = os.path.join(aishell_folder, 'transcript/aishell_transcript_v0.8.txt')
-
 pickle_file = 'LRW_phonemes.pickle'
 
 lrw_path = '/train/roi_80_116_175_211_npy_gray'
