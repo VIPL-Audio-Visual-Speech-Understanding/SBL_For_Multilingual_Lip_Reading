@@ -1,0 +1,411 @@
+a  a
+ai  ai
+an  an
+ang  ang
+ao  au
+ba  b a
+bai  b ai
+ban  b an
+bang  b ang
+bao  b au
+bei  b ei
+ben  b en
+beng  b eng
+bi  b ii
+bian  b i an
+biao  b i au
+bie  b ie
+bin  b in
+bing  b ing
+bo  b uo
+bu  b uu
+ca  ts a
+cai  ts ai
+can  ts an
+cang  ts ang
+cao  ts au
+ce  ts e1
+cei  ts ei
+cen  ts en
+ceng  ts eng
+cha  ch a
+chai  ch ai
+chan  ch an
+chang  ch ang
+chao  ch au
+che  ch e1
+chen  ch en
+cheng  ch eng
+chi  ch iii
+chong  ch ong
+chou  ch eu
+chu  ch uu
+chua  ch u a
+chuai  ch u ai
+chuan  ch u an
+chuang  ch u ang
+chui  ch u ei
+chun  ch u en
+chuo  ch uo
+ci  ts iii
+cong  ts ong
+cou  ts eu
+cu  ts uu
+cuan  ts u an
+cui  ts u ei
+cun  ts u en
+cuo  ts uo
+da  d a
+dai  d ai
+dan  d an
+dang  d ang
+dao  d au
+de  d e1
+dei  d ei
+den  d en
+deng  d eng
+di  d ii
+dia  d i a
+dian  d i an
+diao  d i au
+die  d ie
+ding  d ing
+diu  d i eu
+dong  d ong
+dou  d eu
+du  d uu
+duan  d u an
+dui  d u ei
+dun  d u en
+duo  d uo
+e  e1
+ei  ei
+en  en
+eng  eng
+er  er
+fa  f a
+fan  f an
+fang  f ang
+fei  f ei
+fen  f en
+feng  f eng
+fo  f uo
+fou  f eu
+fu  f uu
+ga  g a
+gai  g ai
+gan  g an
+gang  g ang
+gao  g au
+ge  g e1
+gei  g ei
+gen  g en
+geng  g eng
+gong  g ong
+gou  g eu
+gu  g uu
+gua  g u a
+guai  g u ai
+guan  g u an
+guang  g u ang
+gui  g u ei
+gun  g u en
+guo  g uo
+ha  h a
+hai  h ai
+han  h an
+hang  h ang
+hao  h au
+he  h e1
+hei  h ei
+hen  h en
+heng  h eng
+hong  h ong
+hou  h eu
+hu  h uu
+hua  h u a
+huai  h u ai
+huan  h u an
+huang  h u ang
+hui  h u ei
+hun  h u en
+huo  h uo
+ji  j ii
+jia  j i a
+jian  j i an
+jiang  j i ang
+jiao  j i au
+jie  j ie
+jin  j in
+jing  j ing
+jiong  j i ong
+jiu  j i eu
+ju  j yu
+juan  j yu an
+jue  j yue
+jun  j yu n
+ka  k a
+kai  k ai
+kan  k an
+kang  k ang
+kao  k au
+ke  k e1
+kei  k ei
+ken  k n
+keng  k eng
+kiu  k i eu
+kong  k ong
+kou  k eu
+ku  k uu
+kua  k u a
+kuai  k u ai
+kuan  k u an
+kuang  k u ang
+kui  k u ei
+kun  k u en
+kuo  k uo
+la  l a
+lai  l ai
+lan  l an
+lang  l ang
+lao  l au
+le  l e1
+lei  l ei
+leng  l eng
+li  l ii
+lia  l i a
+lian  l i an
+liang  l i ang
+liao  l i au
+lie  l ie
+lin  l in
+ling  l ing
+liu  l i eu
+long  l ong
+lou  l eu
+lu  l uu
+luan  l u an
+lun  l u en
+luo  l uo
+lv  l yu
+lve  l yue
+ma  m a
+mai  m ai
+man  m an
+mang  m ang
+mao  m au
+me  m e1
+mei  m ei
+men  m en
+meng  m eng
+mi  m ii
+mian  m i an
+miao  m i au
+mie  m ie
+min  m in
+ming  m ing
+miu  m i eu
+mo  m uo
+mou  m eu
+mu  m uu
+na  n a
+nai  n ai
+nan  n an
+nang  n ang
+nao  n au
+ne  n e1
+nei  n ei
+nen  n en
+neng  n eng
+ni  n ii
+nian  n i an
+niang  n i ang
+niao  n i au
+nie  n ie
+nin  n in
+ning  n ing
+niu  n i eu
+nong  n ong
+nou  n eu
+nu  n uu
+nuan  n u an
+nuo  n uo
+nv  n yu
+nve  n yue
+o  o
+ou  eu
+pa  p a
+pai  p ai
+pan  p an
+pang  p ang
+pao  p au
+pei  p ei
+pen  p en
+peng  p eng
+pi  p ii
+pian  p i an
+piao  p i au
+pie  p ie
+pin  p in
+ping  p ing
+po  p uo
+pou  p eu
+pu  p uu
+qi  q ii
+qia  q i a
+qian  q i an
+qiang  q i ang
+qiao  q i au
+qie  q ie
+qin  q in
+qing  q ing
+qiong  q i ong
+qiu  q i eu
+qu  q yu
+quan  q yu an
+que  q yue
+qun  q yu n
+ran  zh1 an
+rang  zh1 ang
+rao  zh1 au
+re  zh1 e1
+ren  zh1 en
+reng  zh1 eng
+ri  zh1 iii
+rong  zh1 ong
+rou  zh1 eu
+ru  zh1 uu
+ruan  zh1 u an
+rui  zh1 u ei
+run  zh1 u en
+ruo  zh1 uo
+sa  s a
+sai  s ai
+san  s an
+sang  s ang
+sao  s au
+se  s e1
+sei  s ei
+sen  s en
+seng  s eng
+sha  sh a
+shai  sh ai
+shan  sh an
+shang  sh ang
+shao  sh au
+she  sh e1
+shei  sh ei
+shen  sh en
+sheng  sh eng
+shi  sh iii
+shou  sh eu
+shu  sh uu
+shua  sh u a
+shuai  sh u ai
+shuan  sh u an
+shuang  sh u ang
+shui  sh u ei
+shun  sh u en
+shuo  sh uo
+si  s iii
+song  s ong
+sou  s eu
+su  s uu
+suan  s u an
+sui  s u ei
+sun  s u en
+suo  s uo
+ta  t a
+tai  t ai
+tan  t an
+tang  t ang
+tao  t au
+te  t e1
+teng  t eng
+ti  t ii
+tian  t i an
+tiao  t i au
+tie  t ie
+ting  t ing
+tong  t ong
+tou  t eu
+tu  t uu
+tuan  t u an
+tui  t u ei
+tun  t u en
+tuo  t uo
+wa  w a
+wai  w ai
+wan  w an
+wang  w ang
+wei  w ei
+wen  w en
+weng  w eng
+wo  w uo
+wu  w uu
+xi  x ii
+xia  x i a
+xian  x i an
+xiang  x i ang
+xiao  x i au
+xie  x ie
+xin  x in
+xing  x ing
+xiong  x i ong
+xiu  x i eu
+xu  x yu
+xuan  x yu an
+xue  x yue
+xun  x yu n
+ya  y a
+yan  y an
+yang  y ang
+yao  y au
+ye  y ie
+yi  y ii
+yin  y in
+ying  y ing
+yo  y o
+yong  y ong
+you  y eu
+yu  yu
+yuan  yu an
+yue  yue
+yun  yu n
+za  z a
+zai  z ai
+zan  z an
+zang  z ang
+zao  z au
+ze  z e1
+zei  z ei
+zen  z en
+zeng  z eng
+zha  zh a
+zhai  zh ai
+zhan  zh an
+zhang  zh ang
+zhao  zh au
+zhe  zh e1
+zhei  zh ei
+zhen  zh en
+zheng  zh eng
+zhi  zh iii
+zhong  zh ong
+zhou  zh eu
+zhu  zh uu
+zhua  zh u a
+zhuai  zh u ai
+zhuan  zh u an
+zhuang  zh u ang
+zhui  zh u ei
+zhun  zh u en
+zhuo  zh uo
+zi  z iii
+zong  z ong
+zou  z eu
+zu  z uu
+zuan  z u an
+zui  z u ei
+zun  z u en
+zuo  z uo
