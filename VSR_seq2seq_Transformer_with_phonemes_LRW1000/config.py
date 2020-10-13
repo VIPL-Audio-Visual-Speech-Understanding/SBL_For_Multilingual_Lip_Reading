@@ -31,22 +31,14 @@ num_test = 7176
 
 word_number = 6
 
-####这里的vocab_size要根据具体的实际情况来修�?vocab_size = 500
+####这里的vocab_size要根据具体的实际情况来修�?vocab_size = 500
 p = 1
 mask = 0.7
 
 vocab_size = 48
-
-DATA_DIR = 'data'
-aishell_folder = 'data/data_aishell'
-wav_folder = os.path.join(aishell_folder, 'wav')
-tran_file = os.path.join(aishell_folder, 'transcript/aishell_transcript_v0.8.txt')
 
 pickle_file = 'LRW.pickle'
 
 lrw1000_path = '/train/LRW1000_npy_rsz122_gray'
 lrw1000_info = '/home/luomingshuang/2020-BMVC/LRW1000_info'
 lrw1000_wav = '/train/LRW1000_audio'
-#grid_wav = '/home/luomingshuang/GRID/audio'
-#grid_images = '/train/GRID_6k_lip_train_val_align'
-#grid_text = '/home/luomingshuang/GRID/text'
