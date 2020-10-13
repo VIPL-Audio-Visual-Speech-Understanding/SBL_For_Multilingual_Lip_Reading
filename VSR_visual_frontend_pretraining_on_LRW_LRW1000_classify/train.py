@@ -144,8 +144,6 @@ def train_net(args):
                         'Loss (loss:{3}, loss_1500:{4}, loss_2:{5}) {loss.val:.5f} ({loss.avg:.5f}) '.format(epoch, i, len(train_loader), loss.item(), loss_1500.item(), loss_2.item(), loss=losses))
 
             k += 1
-            #if k == 1:
-             #   break
         
         visual_train_acc_lrw = running_corrects_train_visual_lrw.item() / running_all_train_visual_lrw
         visual_train_acc_lrw1000 = running_corrects_train_visual_lrw1000.item() / running_all_train_visual_lrw1000

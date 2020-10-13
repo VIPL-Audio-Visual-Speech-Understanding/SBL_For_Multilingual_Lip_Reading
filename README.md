@@ -61,13 +61,38 @@ step 1: set teach_forcing_rate=0.5--> python train.py
 step 2: set teach_forcing_rate=0.1--> python train.py
 ```
 * Stage 3: Based on stage 2 and stage 3, we could get a good pretrained encoder (including visual-frontend
- and transformer encoder) and a good pretrained SBL decoder. 
+ and transformer encoder) and a good pretrained SBL decoder. By loading the pretrained model, we set teach_forcing_rate=0.5
+ and set p.requires_grad = True. By finetuning the model, we can get a good result.
 ```
-Finetune the total model.
+cd SBL_Multilingual_Lip_reading/
+python train.py
 ```
-* Stage 4:
+* Stage 4: The final model is available at [GoogleDrive](https://drive.google.com/file/d/113zUIOWHCAJpQzh9S5LcSsuR8HGoRUUV/view?usp=sharing).
+And copy the checkpoint to SBL_Multilingual_Lip_reading. We can test the model as follows:
 ```
-testing the model.
+##loading the model checkpoint
+cp -r test_model_checkpoint.tar SBL_Multilingual_Lip_reading/
+cd SBL_Multilingual_Lip_reading
+python test.py
+```
+Others
+----
+Due to the difference in quantity and quality between the two data sets of LRW and LRW1000, we can also consider
+using other training methods to train multilingual lip reading model. In general, LRW1000 is more difficult train to than 
+LRW. Here, we suggest another training method as follows: 
+```
+Step 1: Training the model with all of LRW1000 to a certain degree of convergence.
+###--->train from scratch and get the first pretrained model.
+Step 2: Mix 20% of LRW data and all LRW1000 data and train the model to converge.
+###--->load the first pretrained model and get the second pretrained model.
+Step 3: Mix 40% of LRW data and all LRW1000 data and train the model to converge.
+###--->load the second pretrained model and get the third pretrained model.
+Step 4: Mix 60% of LRW data and all LRW1000 data and train the model to converge.
+###--->load the third pretrained model and get the fourth pretrained model.
+Step 5: Mix 80% of LRW data and all LRW1000 data and train the model to converge.
+###--->load the fourth pretrained model and get the fifth pretrained model.
+Step 6: Mix all LRW data and all LRW1000 data and train the model to converge.
+###--->load the fifth pretrained model and get the sixth pretrained model.
 ```
 
 Reference
