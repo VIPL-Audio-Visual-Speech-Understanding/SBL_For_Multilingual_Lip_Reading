@@ -96,7 +96,7 @@ Step 6: Mix all LRW data and all LRW1000 data and train the model to converge.
 
 Reference
 ----
-If this work is useful for your research, please cite our work:
+If this work is useful for your research, please cite the following paper:
 ```
 @article{luo2020synchronous,
   title={Synchronous Bidirectional Learning for Multilingual Lip Reading},
