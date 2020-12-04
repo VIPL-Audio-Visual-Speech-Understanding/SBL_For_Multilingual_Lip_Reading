@@ -66,12 +66,8 @@ step 2: set teach_forcing_rate=0.1--> python train.py
 cd SBL_Multilingual_Lip_reading/
 python train.py
 ```
-* Stage 4: The final model is available at [GoogleDrive](https://drive.google.com/file/d/113zUIOWHCAJpQzh9S5LcSsuR8HGoRUUV/view?usp=sharing).
-And copy the checkpoint to SBL_Multilingual_Lip_reading. We can test the model as follows:
+* Stage 4: After training, we can test the model as follows:
 ```
-##loading the model checkpoint
-cp -r test_model_checkpoint.tar SBL_Multilingual_Lip_reading/
-cd SBL_Multilingual_Lip_reading
 python test.py
 ```
 Others
