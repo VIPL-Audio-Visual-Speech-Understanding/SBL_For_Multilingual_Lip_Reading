@@ -40,7 +40,13 @@ The VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify refers to the work t
 cd VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify
 python train.py
 ```
-In SBL_MLR (SBL_Multilingual_Lip_reading), for training stage, we suggest the following three stages:
+In SBL_MLR (SBL_Multilingual_Lip_reading), for training stage, we can run the codes as follows:
+```
+cd SBL_Multilingual_Lip_Reading/
+python train.py
+```
+However, the above direct method will cost us much time for coverging. 
+So, here, we suggest the following three stages:
 * Stage 1: For accelerating the training speed, in the stage 1, we pretrained the encoder part 
 (including the visual-frontend and the transformer encoder) by a 1500 classes classifying task.
 ```
