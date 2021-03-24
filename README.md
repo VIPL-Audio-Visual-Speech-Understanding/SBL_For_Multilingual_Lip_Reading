@@ -43,7 +43,8 @@ python train.py
 In SBL_MLR (SBL_Multilingual_Lip_reading), for training stage, we can run the codes as follows:
 ```
 cd SBL_Multilingual_Lip_Reading/
-python train.py
+step 1: set teach_forcing_rate=0.5--> python train.py
+step 2: set teach_forcing_rate=0.1--> python train.py
 ```
 However, the above direct method will cost us much time for coverging. 
 So, here, we suggest the following three stages:
