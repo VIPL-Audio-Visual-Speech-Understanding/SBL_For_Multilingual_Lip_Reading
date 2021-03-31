@@ -12,7 +12,7 @@ Dependencies
 
 Dataset
 ----
-This project is trained on LRW (grayscale) and LRW-1000 (grayscale).
+This project is trained on LRW (grayscale) and [LRW-1000](https://vipl.ict.ac.cn/view_database.php?id=14) (grayscale).
 
 Training And Testing
 ----
@@ -25,8 +25,8 @@ Thanks to them.
 
 In this respository, we placed four directories. 
 
-The directories named "VSR_seq2seq_Transformer_with_phonemes_LRW" and "VSR_seq2seq_Transformer_with_phonemes_LRW1000" 
-denote the work that train the model LRW and LRW1000 each other with phonemes. 
+The directory named "VSR_seq2seq_Transformer_with_phonemes_LRW" denotes the work that we train the model with phonemes on LRW and "VSR_seq2seq_Transformer_with_phonemes_LRW1000" 
+denotes the work that we train the model with phonemes with LRW1000. 
 ```
 cd VSR_seq2seq_Transformer_with_phonemes_LRW
 python train.py
@@ -35,26 +35,26 @@ python train.py
 cd VSR_seq2seq_Transformer_with_phonemes_LRW1000
 python train.py
 ```
-The "VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify" refers to the work which is a 1500-classes classifying task. 
+The "VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify" refers to the work which is a 1500-classes classifying task based on the mixtures of all the word labels in LRW and LRW-1000. 
 ```
 cd VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify
 python train.py
 ```
-In SBL_MLR ("SBL_Multilingual_Lip_reading"), for training stage, we can run the codes as follows:
+In SBL_MLR ("SBL_Multilingual_Lip_reading"), for training stage, we can run the codes directly as follows:
 ```
 cd SBL_Multilingual_Lip_Reading/
 step 1: set teach_forcing_rate=0.5--> python train.py
 step 2: set teach_forcing_rate=0.1--> python train.py
 ```
 However, the above direct method will cost us much time for coverging. 
-So, here, we suggest the following three stages to accelerate the training process:
-* Stage 1: We pretrained the encoder part 
-(including the visual-frontend and the transformer encoder) by a 1500 classes classifying task as follows.
+So, here, we also suggest another training method, including three stages to accelerate the training process:
+* Stage 1: Pretraining the encoder part 
+(including the visual-frontend and the transformer encoder) by a 1500-class classification task as follows.
 ```
 cd VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify
 python train.py
 ```
-* Stage 2: With the pretrained encoder model by stage 1 as the initialized encoder, we went on training the SBL model. 
+* Stage 2: With the pretrained encoder model obtained at stage 1 as the initialized encoder, the SBL model can be trained further to learn the decoder part. 
 Loading the pretrained encoder part model, and fixing it. In this stage, we mainly trained the 
 SBL transformer decoder. 
 ```
@@ -66,14 +66,12 @@ vim transformer/transformer.py ## set p.requires_grad = False
 step 1: set teach_forcing_rate=0.5--> python train.py
 step 2: set teach_forcing_rate=0.1--> python train.py
 ```
-* Stage 3: Based on stage 2 and stage 3, we could get a good pretrained encoder (including visual-frontend
- and transformer encoder) and a good pretrained SBL decoder. By loading the pretrained model, we set teach_forcing_rate=0.5
- and set p.requires_grad = True. By finetuning the model, we can get a good result.
+* Stage 3: The final result can be obtained by finetuning the model based on the pretrained parameters obtained in stage 2. In this process, the teach_forcing_rate and p.requires_grad are set as 0.5 and True respectively.
 ```
 cd SBL_Multilingual_Lip_reading/
 python train.py
 ```
-* Stage 4: After training, we can test the model as follows:
+Finally, for test, the test.py could be run to obtain the testing results.
 ```
 python test.py
 ```
