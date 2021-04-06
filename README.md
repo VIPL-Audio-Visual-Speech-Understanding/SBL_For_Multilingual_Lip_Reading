@@ -54,8 +54,8 @@ cd VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify
 python train.py
 ```
 * Stage 2: With the pretrained encoder model obtained at stage 1 as the initialized encoder, the SBL model can be trained further to learn the decoder part. 
-Loading the pretrained encoder part model, and fixing it. In this stage, we mainly trained the 
-SBL transformer decoder. 
+Loading the pretrained encoder part model, and fixing it. In this stage, the 
+SBL transformer decoder is the main part to be trained. 
 ```
 cp -r VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify/BEST_checkpoint_only_visual_based_lrw_lrw1000_1500.tar SBL_For_Multilingual_Lip_Reading/
 cd SBL_For_Multilingual_Lip_Reading
@@ -82,7 +82,7 @@ If this is useful for your research, please cite our work:
 @article{luo2020synchronous,
   title={Synchronous Bidirectional Learning for Multilingual Lip Reading},
   author={Luo, Mingshuang and Yang, Shuang and Chen, Xilin and Liu, Zitao and Shan, Shiguang},
-  journal={in proceeding of British Machine Vision Conference},
+  journal={in proceedings of British Machine Vision Conference},
   year={2020}
 }
 ```
