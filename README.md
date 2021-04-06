@@ -40,7 +40,7 @@ The "VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify" refers to the work
 cd VSR_visual_frontend_pretraining_on_LRW_LRW1000_classify
 python train.py
 ```
-In SBL_MLR ("SBL_Multilingual_Lip_reading"), for training stage, we can run the codes directly as follows:
+In SBL_MLR ("SBL_Multilingual_Lip_reading"), for training stage, the following codes can be run directly:
 ```
 cd SBL_Multilingual_Lip_Reading/
 step 1: set teach_forcing_rate=0.5--> python train.py
