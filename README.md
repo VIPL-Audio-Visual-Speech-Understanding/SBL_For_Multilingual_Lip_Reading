@@ -25,8 +25,8 @@ Thanks to them.
 
 There are four directories in this repository. 
 
-The directory named "VSR_seq2seq_Transformer_with_phonemes_LRW" denotes the work that we train the model with phonemes on LRW and "VSR_seq2seq_Transformer_with_phonemes_LRW1000" 
-denotes the work that we train the model with phonemes with LRW1000. 
+The directory named "VSR_seq2seq_Transformer_with_phonemes_LRW" denotes the work that the model is trained with phonemes on LRW and "VSR_seq2seq_Transformer_with_phonemes_LRW1000" 
+denotes the work that the model is trained with phonemes with LRW1000. 
 ```
 cd VSR_seq2seq_Transformer_with_phonemes_LRW
 python train.py
