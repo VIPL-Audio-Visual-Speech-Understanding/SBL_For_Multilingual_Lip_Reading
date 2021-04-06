@@ -46,8 +46,7 @@ cd SBL_Multilingual_Lip_Reading/
 step 1: set teach_forcing_rate=0.5--> python train.py
 step 2: set teach_forcing_rate=0.1--> python train.py
 ```
-However, the above direct method will cost us much time for coverging. 
-So, here, we also suggest another training method, including three stages to accelerate the training process:
+To accelerate the training process, we also suggest another training method, including the following three stages:
 * Stage 1: Pretraining the encoder part 
 (including the visual-frontend and the transformer encoder) by a 1500-class classification task as follows.
 ```
