@@ -16,7 +16,7 @@ This project is performed on LRW (grayscale) and [LRW-1000](https://vipl.ict.ac.
 
 Training And Testing
 ----
-About the phonemes for modeling in this work, we built our phonemes vocabulary based on [DaCiDian](https://github.com/aishell-foundation/DaCiDian), 
+About the phonemes for modeling in this work, the phonemes vocabulary is based on [DaCiDian](https://github.com/aishell-foundation/DaCiDian), 
 [BigCiDian](https://github.com/speechio/BigCiDian), [g2p](https://github.com/Kyubyong/g2p) and [
 g2pC](https://github.com/Kyubyong/g2pC). Here, thanks for their inspiring works. 
 
