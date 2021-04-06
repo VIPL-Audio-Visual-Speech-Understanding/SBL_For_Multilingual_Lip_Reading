@@ -23,7 +23,7 @@ g2pC](https://github.com/Kyubyong/g2pC). Here, thanks for their inspiring works.
 Some codes of this respository is based on [Speech-Transformer](https://github.com/kaituoxu/Speech-Transformer) and [end-to-end-lipreading](https://github.com/mpc001/end-to-end-lipreading). 
 Thanks to them.
 
-In this respository, we placed four directories. 
+There are four directories in this repository. 
 
 The directory named "VSR_seq2seq_Transformer_with_phonemes_LRW" denotes the work that we train the model with phonemes on LRW and "VSR_seq2seq_Transformer_with_phonemes_LRW1000" 
 denotes the work that we train the model with phonemes with LRW1000. 
