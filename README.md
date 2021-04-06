@@ -12,7 +12,7 @@ Dependencies
 
 Dataset
 ----
-This project is trained on LRW (grayscale) and [LRW-1000](https://vipl.ict.ac.cn/view_database.php?id=14) (grayscale).
+This project is performed on LRW (grayscale) and [LRW-1000](https://vipl.ict.ac.cn/view_database.php?id=14) (grayscale).
 
 Training And Testing
 ----
