@@ -2,7 +2,7 @@
 Introduction
 ----
 This is a project for multilingual lip reading with synchronous bidirectional learning. 
-In this project, we implemented it with Pytorch. Our paper can be found [here](https://vipl.ict.ac.cn/uploadfile/upload/2020093011033041.pdf).
+In this project, we implemented it with Pytorch. Our paper can be found [here](https://www.bmvc2020-conference.com/assets/papers/0796.pdf).
 
 Dependencies
 ----
